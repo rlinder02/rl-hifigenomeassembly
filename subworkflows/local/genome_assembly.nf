@@ -20,8 +20,16 @@ workflow GENOME_ASSEMBLY {
 
     HIFIASM ( ch_fastq )
     ch_versions = ch_versions.mix(HIFIASM.out.versions.first())
+    ch_hap1 = HIFIASM.out.haplotype1
+    ch_hap2 = HIFIASM.out.haplotype2
+    
+    // trying to make a new meta map (https://training.nextflow.io/advanced/metadata/#first-pass)
+    ch_haps = ch_hap1.combine(ch_hap2, by:0)
+    new_meta_ch = ch_haps.map {id, }
+    
+    ch_haps = ch_hap1.mix(ch_hap2)
 
-    TO_FASTA ( HIFIASM.out.processed_contigs )
+    TO_FASTA ( ch_haps )
     ch_versions = ch_versions.mix(TO_FASTA.out.versions.first())
 
     FCS_FCSADAPTOR ( TO_FASTA.out.fasta )

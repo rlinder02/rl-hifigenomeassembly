@@ -15,7 +15,7 @@ process FCSGX {
     output:
     tuple val(meta), path("*.cleaned.fasta")                        , emit: cleaned_assembly
     tuple val(meta), path("*.contam.fasta")                         , emit: contam_fasta
-    tuple val(meta), path("*_gx_out/*.fcs_gx_report.txt")  , emit: contam_report
+    tuple val(meta), path("*_gx_out/*.fcs_gx_report.txt")           , emit: contam_report
     path "versions.yml"                                             , emit: versions
 
     when:
@@ -26,20 +26,20 @@ process FCSGX {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def VERSION = '0.5.4' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
+    name=\$(basename $assembly .fa.gz)
     python3 /app/bin/run_gx \\
         --fasta $assembly \\
-        --out-dir ./${prefix}_gx_out \\
+        --out-dir ./\${name}_gx_out \\
         --gx-db $gxdb \\
         --tax-id $tax_id \\
         $args
 
-    name=\$(basename $assembly .fa.gz)
     zcat $assembly > \$name.fasta
     /app/bin/gx clean-genome \\
         -i \$name.fasta \\
-        --action-report ./${prefix}_gx_out/*.fcs_gx_report.txt \\
-        --contam-fasta-out ${prefix}.contam.fasta \\
-        --output ${prefix}.cleaned.fasta \\
+        --action-report ./\${name}_gx_out/*.fcs_gx_report.txt \\
+        --contam-fasta-out \${name}.contam.fasta \\
+        --output \${name}.cleaned.fasta \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

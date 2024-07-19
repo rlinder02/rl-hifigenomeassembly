@@ -10,7 +10,7 @@ workflow ASSEMBLY_QC {
 
     take:
     
-    ch_assembly_fasta // channel: [ val(meta), path(fa.gz) ]
+    ch_assembly_fasta    // channel: [ val(meta), path(fa.gz) ]
     ch_corrected_ref     // channel: [ path(fasta) ]
     ch_samplesheet
 

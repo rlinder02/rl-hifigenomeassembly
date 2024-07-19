@@ -23,11 +23,19 @@ process BIOAWK {
 
     def VERSION = '1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
-    bioawk \\
-        $args \\
-        $input \\
-        > ${prefix}
-
+    if [[ $input =~ ".scaffolded.fasta" ]]; then
+        name=\$(basename $input .scaffolded.fasta)
+        bioawk \\
+            $args \\
+            $input \\
+            > \${name}.${prefix}
+    else
+        bioawk \\
+            $args \\
+            $input \\
+            > ${prefix}
+    fi
+    
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bioawk: $VERSION

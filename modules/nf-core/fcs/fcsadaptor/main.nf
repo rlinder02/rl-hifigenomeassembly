@@ -36,19 +36,20 @@ process FCS_FCSADAPTOR {
         $assembly
 
     # compress and/or rename files with prefix
+    output_name=\$(basename $assembly .fasta)
     num_contamination_lines=\$(cat "output/fcs_adaptor_report.txt" | wc -l)
     if [[ \$num_contamination_lines -gt 1 ]]; then
         find output/cleaned_sequences/  -type f ! -name "*.gz" -exec gzip {} \\;
-        cp output/cleaned_sequences/*     "${prefix}.cleaned_sequences.fa.gz"
+        cp output/cleaned_sequences/*     "\${output_name}.cleaned_sequences.fa.gz"
     fi
     if [[ \$num_contamination_lines -le 1 ]]; then
         find output/cleaned_sequences/  -type f ! -name "*.gz" -exec gzip {} \\;
-        cp output/cleaned_sequences/*     "${prefix}.cleaned_sequences.fa.gz"
+        cp output/cleaned_sequences/*     "\${output_name}.cleaned_sequences.fa.gz"
     fi
-    cp "output/fcs_adaptor_report.txt"    "${prefix}.fcs_adaptor_report.txt"
-    cp "output/fcs_adaptor.log"           "${prefix}.fcs_adaptor.log"
-    cp "output/pipeline_args.yaml"        "${prefix}.pipeline_args.yaml"
-    cp "output/skipped_trims.jsonl"       "${prefix}.skipped_trims.jsonl"
+    cp "output/fcs_adaptor_report.txt"    "\${output_name}.fcs_adaptor_report.txt"
+    cp "output/fcs_adaptor.log"           "\${output_name}.fcs_adaptor.log"
+    cp "output/pipeline_args.yaml"        "\${output_name}.pipeline_args.yaml"
+    cp "output/skipped_trims.jsonl"       "\${output_name}.skipped_trims.jsonl"
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
