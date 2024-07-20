@@ -20,13 +20,15 @@ workflow GENOME_ASSEMBLY {
 
     HIFIASM ( ch_fastq )
     ch_versions = ch_versions.mix(HIFIASM.out.versions.first())
-    ch_hap1 = HIFIASM.out.haplotype1
-    ch_hap2 = HIFIASM.out.haplotype2
-    
+    ch_hap1 = HIFIASM.out.haplotype1.map { meta, path ->  
+                                        meta = [id:meta,type:'hap1']
+                                        [meta, path]
+                                        }
+    ch_hap2 = HIFIASM.out.haplotype2.map { meta, path ->  
+                                        meta = [id:meta,type:'hap2']
+                                        [meta, path]
+                                        }
     // trying to make a new meta map (https://training.nextflow.io/advanced/metadata/#first-pass)
-    ch_haps = ch_hap1.combine(ch_hap2, by:0)
-    new_meta_ch = ch_haps.map {id, }
-    
     ch_haps = ch_hap1.mix(ch_hap2)
 
     TO_FASTA ( ch_haps )
