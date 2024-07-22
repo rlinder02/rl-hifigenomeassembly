@@ -29,6 +29,7 @@ process QUAST {
     def features  = gff             ?  "--features $gff" : ''
     def reference = ref           ?  "-r $ref"       : ''
     """
+    chmod 775 /usr/local/lib/python3.9/site-packages/quast_libs/
     quast.py \\
         --output-dir $prefix \\
         $reference \\
