@@ -31,6 +31,7 @@ process HIFIASM {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    echo $primary_only
     if [ $primary_only ]; then
         echo "This is a primary-only assembly"
         hifiasm \\

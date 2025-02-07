@@ -56,7 +56,7 @@ workflow GENOME_ASSEMBLY {
         ch_both_refs = ch_ref_hap1.mix(ch_ref_hap2)
         ch_haps = ch_both_haps
         ch_refs = ch_both_refs
-        //ch_haps.view()
+        ch_haps.view()
         ch_refs.view()
     }
 
